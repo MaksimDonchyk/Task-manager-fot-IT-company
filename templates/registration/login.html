@@ -1,0 +1,22 @@
+{% extends "manager/base.html" %}
+
+{% block title %} Вхід до системи {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm p-4 mt-5">
+            <h2 class="text-center mb-4">Вхід у Task Manager</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Увійти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
