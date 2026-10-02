@@ -60,6 +60,7 @@ class Worker(AbstractUser):
             return True
         return False
 
+
 class Team(models.Model):
     name = models.CharField(max_length=255, unique=True)
     task_types = models.ManyToManyField(
@@ -104,6 +105,7 @@ class Task(models.Model):
     MAJOR = "Major", "Major"
     MINOR = "Minor", "Minor"
     TRIVIAL = "Trivial", "Trivial"
+
 
   class StatusChoices(models.TextChoices):
     IN_PROGRESS = "in_progress", "В роботі"

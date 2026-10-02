@@ -51,6 +51,7 @@ class TaskListView(LoginRequiredMixin,ListView):
 
         return queryset.filter(assignees=user)
 
+
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = "manager/task_detail.html"
