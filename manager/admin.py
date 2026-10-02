@@ -6,7 +6,8 @@ from manager.models import Task, Position, TaskType, Worker, Team, Project
 
 @admin.register(Position)
 class PositionAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("name", "group")
+    list_filter = ("group",)
 
 
 @admin.register(TaskType)

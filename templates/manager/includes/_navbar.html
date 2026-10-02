@@ -1,10 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <!-- Логотип та кіт зліва -->
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'manager:project-list' %}">
+      <!-- Піксельний кіт у навігації -->
+      <img src="{% static 'manager/images/logo.png' %}" alt="Cat Mascot" width="30" height="30" class="me-2">
+      <span>IT Task Manager 🐾</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manager:project-list' %}">Проєкти</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manager:task-list' %}">Завдання</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manager:worker-list' %}">Працівники</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manager:team-list' %}">Команди</a>
+        </li>
+      </ul>
+
+      <!-- Правий бік навбару (інформація про користувача та вихід) -->
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              🐱 {{ user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{% url 'manager:worker-detail' user.pk %}">Мій профіль</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="{% url 'logout' %}" method="post" class="px-3">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger w-100">Вийти</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Увійти</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

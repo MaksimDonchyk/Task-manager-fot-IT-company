@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "manager/base.html" %}
+{% load static %}
+{% block title %} Проєкти {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Список проєктів</h1>
+
+    {% if user.is_staff or user.is_superuser %}
+      <a href="{% url 'manager:project-create' %}" class="btn btn-primary">
+        Створити проєкт ➕
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="row">
+    {% for project in object_list %}
+      <div class="col-md-4 mb-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="{% url 'manager:project-detail' project.pk %}" class="text-decoration-none">
+                {{ project.name }}
+              </a>
+              <img src="{% static 'manager/images/project.png' %}" alt="Team Cat" width="24" height="24">
+            </h5>
+            <p class="card-text text-muted">{{ project.description|default:"Без опису"|truncatechars:100 }}</p>
+            <p class="card-text"><small class="text-muted">Команда: {{ project.team.name|default:"Не призначено" }}</small></p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted">Ще немає створених проєктів.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

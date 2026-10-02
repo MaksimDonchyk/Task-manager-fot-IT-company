@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "manager/base.html" %}
+
+{% block title %} Працівник: {{ worker.username }} {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>{{ worker.username }}</h2>
+        <span class="badge bg-primary fs-6">{{ worker.get_is_team_lead_display|default:"Працівник" }}</span>
+      </div>
+
+      <hr>
+
+      <p class="mb-2"><strong>Ім'я та прізвище:</strong> {{ worker.first_name }} {{ worker.last_name }}</p>
+      <p class="mb-2"><strong>Email:</strong> {{ worker.email|default:"Не вказано" }}</p>
+      <p class="mb-3"><strong>Посада:</strong> {{ worker.position.name|default:"Без посади" }}</p>
+
+      <div class="mb-4">
+        <strong>Команди:</strong>
+        <ul class="list-group mt-2">
+          {% for team in worker.teams.all %}
+            <li class="list-group-item">{{ team.name }}</li>
+          {% empty %}
+            <li class="list-group-item text-muted">Не входить до жодної команди</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <strong>Призначені завдання:</strong>
+        <ul class="list-group mt-2">
+          {% for task in worker.tasks.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="{% url 'manager:task-detail' task.pk %}" class="text-decoration-none">
+                {{ task.name }}
+              </a>
+              <span class="badge bg-secondary">{{ task.get_status_display }}</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">Немає активних завдань</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'manager:worker-list' %}" class="btn btn-secondary">Назад до списку працівників</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -11,7 +11,15 @@ class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ["name", "description", "deadline", "priority", "task_type", "project", "assignees"]
+        fields = [
+            "name",
+            "description",
+            "deadline",
+            "priority",
+            "task_type",
+            "project",
+            "assignees",
+        ]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
@@ -21,11 +29,21 @@ class TaskForm(forms.ModelForm):
             "assignees": forms.CheckboxSelectMultiple(),
         }
 
-    def clean_name(self):
-        name = self.cleaned_data.get("name")
-        if len(name) < 4:
-            raise ValidationError("Назва завдання повинна містити щонайменше 4 символи.")
-        return name
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        if user and not (user.is_staff or user.is_superuser):
+            user_teams = user.teams.all()
+
+            if user_teams.exists():
+                self.fields["task_type"].queryset = TaskType.objects.filter(
+                    teams__in=user_teams
+                ).distinct()
+
+                self.fields["assignees"].queryset = Worker.objects.filter(
+                    teams__in=user_teams
+                ).distinct()
 
 
 class PositionForm(forms.ModelForm):
@@ -55,10 +73,15 @@ class TaskTypeForm(forms.ModelForm):
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ["name", "members"]
+        fields = ["name", "task_types", "members"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
-            "members": forms.CheckboxSelectMultiple(),
+            "task_types": forms.CheckboxSelectMultiple(
+                attrs={"class": "form-check-input"}
+            ),
+            "members": forms.CheckboxSelectMultiple(
+                attrs={"class": "form-check-input"}
+            ),
         }
 
     def clean_name(self):
@@ -69,20 +92,34 @@ class TeamForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-    class Meta:
-        model = Project
-        fields = ["name", "description", "team"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-            "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "team": forms.Select(attrs={"class": "form-select"}),
-        }
 
-    def clean_name(self):
-        name = self.cleaned_data.get("name")
-        if len(name) < 3:
-            raise ValidationError("Назва проєкту повинна містити щонайменше 3 символи.")
-        return name
+  class Meta:
+    model = Project
+    fields = ["name", "description", "team"]
+    widgets = {
+        "name": forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Введіть назву проєкту",
+            }
+        ),
+        "description": forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 3,
+                "placeholder": "Короткий опис проєкту...",
+            }
+        ),
+        "team": forms.Select(attrs={"class": "form-select"}),
+    }
+
+  def clean_name(self):
+    name = self.cleaned_data.get("name")
+    if name and len(name) < 3:
+      raise ValidationError(
+          "Назва проєкту повинна містити щонайменше 3 символи."
+      )
+    return name
 
 
 class WorkerCreationForm(UserCreationForm):
@@ -96,3 +133,11 @@ class WorkerCreationForm(UserCreationForm):
             "email": forms.EmailInput(attrs={"class": "form-control"}),
             "position": forms.Select(attrs={"class": "form-select"}),
         }
+
+    def save(self, commit=True):
+        worker = super().save(commit=False)
+        if commit:
+            worker.save()
+            if worker.position and worker.position.group:
+                worker.groups.add(worker.position.group)
+        return worker

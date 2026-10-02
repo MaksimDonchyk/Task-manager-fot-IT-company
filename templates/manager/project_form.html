@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "manager/base.html" %}
+
+{% block title %} Створити проєкт {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card shadow-sm p-4">
+      <h2 class="mb-4 text-center">Створити новий проєкт</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <!-- Назва проєкту -->
+        <div class="mb-3">
+          <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">Назва проєкту</label>
+          {{ form.name }}
+          {{ form.name.errors }}
+        </div>
+
+        <!-- Опис проєкту -->
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">Опис</label>
+          {{ form.description }}
+          {{ form.description.errors }}
+        </div>
+
+        <!-- Команда проєкту -->
+        <div class="mb-3">
+          <label for="{{ form.team.id_for_label }}" class="form-label fw-bold">Команда</label>
+          {{ form.team }}
+          <div class="form-text text-muted mt-1">Оберіть команду, залучену до цього проєкту.</div>
+          {{ form.team.errors }}
+        </div>
+
+        <!-- Кнопки керування -->
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'manager:project-list' %}" class="btn btn-secondary">Скасувати</a>
+          <button type="submit" class="btn btn-primary">Зберегти проєкт 💾</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
