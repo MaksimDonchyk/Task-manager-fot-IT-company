@@ -16,7 +16,7 @@ from manager.views import (
     TeamCreateView,
     ProjectListView,
     ProjectDetailView,
-    ProjectCreateView, TaskChangeStatusView, ProjectUpdateView, ProjectDeleteView,
+    ProjectCreateView, TaskChangeStatusView, ProjectUpdateView, ProjectDeleteView, TeamUpdateView, TeamDeleteView,
 )
 
 app_name = "manager"
@@ -47,6 +47,8 @@ urlpatterns = [
     path("teams/", TeamListView.as_view(), name="team-list"),
     path("teams/create/", TeamCreateView.as_view(), name="team-create"),
     path("teams/<int:pk>/", TeamDetailView.as_view(), name="team-detail"),
+    path('teams/<int:pk>/update/', TeamUpdateView.as_view(), name='team-update'),
+    path('teams/<int:pk>/delete/', TeamDeleteView.as_view(), name='team-delete'),
 
 
     # Projects

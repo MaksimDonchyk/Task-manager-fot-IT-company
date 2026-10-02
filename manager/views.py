@@ -181,6 +181,19 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
 
+class TeamUpdateView(LoginRequiredMixin, UpdateView):
+    model = Team
+    form_class = TeamForm
+    template_name = 'manager/team_form.html'
+    success_url = reverse_lazy('manager:team-list')
+
+
+class TeamDeleteView(LoginRequiredMixin, DeleteView):
+    model = Team
+    template_name = 'manager/team_confirm_delete.html'
+    success_url = reverse_lazy('manager:team-list')
+
+
 class ProjectListView(ListView):
     model = Project
     template_name = "manager/project_list.html"

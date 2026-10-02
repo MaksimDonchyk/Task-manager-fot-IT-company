@@ -1,6 +1,6 @@
 {% extends "manager/base.html" %}
 
-{% block title %} Завдання: {{ task.name }} {% endblock %}
+{% block title %} Команда: {{ team.name }} {% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -8,42 +8,15 @@
     <div class="col-md-8 offset-md-2">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <h3 class="mb-0">Завдання: {{ task.name }}</h3>
-          <a href="{% url 'manager:task-list' %}" class="btn btn-light btn-sm">Назад до списку</a>
+          <h3 class="mb-0">Команда: {{ team.name }}</h3>
+          <a href="{% url 'manager:team-list' %}" class="btn btn-light btn-sm">Назад до списку</a>
         </div>
         <div class="card-body">
-          <h5 class="card-title text-secondary">Опис завдання:</h5>
-          <p class="card-text">
-            {% if task.description %}
-              {{ task.description }}
-            {% else %}
-              <span class="text-muted">Опис відсутній.</span>
-            {% endif %}
-          </p>
 
-          <hr>
-
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <p><strong>Пріоритет:</strong> {{ task.get_priority_display|default:task.priority }}</p>
-              <p><strong>Статус:</strong> {% if task.is_completed %}✅ Виконано{% else %}⏳ В процесі{% endif %}</p>
-            </div>
-            <div class="col-md-6">
-              <p><strong>Проєкт:</strong>
-                {% if task.project %}
-                  <a href="{% url 'manager:project-detail' task.project.pk %}">{{ task.project.name }}</a>
-                {% else %}
-                  <span class="text-muted">Не прив'язано</span>
-                {% endif %}
-              </p>
-              <p><strong>Дедлайн:</strong> {{ task.deadline|default:"Не вказано" }}</p>
-            </div>
-          </div>
-
-          <h5 class="card-title text-secondary mt-4">Відповідальні працівники:</h5>
-          {% if task.assignees.all %}
-            <ul class="list-group">
-              {% for worker in task.assignees.all %}
+          <h5 class="card-title text-secondary">Учасники команди:</h5>
+          {% if team.members.all %}
+            <ul class="list-group mb-4">
+              {% for worker in team.members.all %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                   {{ worker.username }} ({{ worker.first_name }} {{ worker.last_name }})
                   <a href="{% url 'manager:worker-detail' worker.pk %}" class="btn btn-outline-secondary btn-sm">Профіль</a>
@@ -51,18 +24,33 @@
               {% endfor %}
             </ul>
           {% else %}
-            <p class="text-muted">На це завдання ще не призначено працівників.</p>
+            <p class="text-muted">У цій команді поки немає учасників.</p>
           {% endif %}
+
+          <h5 class="card-title text-secondary mt-4">Проєкти команди:</h5>
+          {% if team.projects.all %}
+            <ul class="list-group">
+              {% for project in team.projects.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <a href="{% url 'manager:project-detail' project.pk %}">{{ project.name }}</a>
+                  <span class="badge bg-info text-dark">Проєкт</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">У цієї команди поки немає проєктів.</p>
+          {% endif %}
+
         </div>
 
         {% if user.is_staff or user.is_superuser %}
           <div class="card-footer d-flex justify-content-between align-items-center bg-light">
-            <span class="text-muted small">Керування завданням:</span>
+            <span class="text-muted small">Керування командою:</span>
             <div>
-              <a href="{% url 'manager:task-update' task.pk %}" class="btn btn-warning btn-sm me-2">
+              <a href="{% url 'manager:team-update' team.pk %}" class="btn btn-warning btn-sm me-2">
                 Редагувати ✏️
               </a>
-              <a href="{% url 'manager:task-delete' task.pk %}" class="btn btn-danger btn-sm">
+              <a href="{% url 'manager:team-delete' team.pk %}" class="btn btn-danger btn-sm">
                 Видалити 🗑️
               </a>
             </div>
