@@ -1,0 +1,50 @@
+{% extends "manager/base.html" %}
+{% load static %}
+{% block title %} Teams List {% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Teams List</h1>
+      {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'manager:team-create' %}" class="btn btn-primary mb-3">Створити команду ➕</a>
+      {% endif %}
+    </div>
+
+    {% if team_list %}
+      <div class="list-group">
+        {% for team in team_list %}
+          <div class="card mb-3 shadow-sm rounded">
+            <div class="card-body">
+              <h4 class="card-title text-dark mb-2">
+                <a href="{% url 'manager:team-detail' team.pk %}" class="text-decoration-none">
+                  {{ team.name }}
+                </a>
+                <img src="{% static 'manager/images/team.png' %}" alt="Team Cat" width="120" height="24">
+              </h4>
+
+              <p class="mb-2">
+                <strong>Спеціалізація (типи завдань):</strong>
+                {% for task_type in team.task_types.all %}
+                  <span class="badge bg-info text-dark">{{ task_type.name }}</span>
+                {% empty %}
+                  <span class="text-muted">Не вказано</span>
+                {% endfor %}
+              </p>
+
+              <p class="mb-0">
+                <strong>Учасники:</strong> {{ team.members.count }} учасників(-ів)
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info" role="alert">
+        Команд поки що немає.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

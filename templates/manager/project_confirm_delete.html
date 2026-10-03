@@ -1,0 +1,24 @@
+{% extends "manager/base.html" %}
+
+{% block title %} Видалити проєкт {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="card shadow-sm p-4 border-danger">
+      <h2 class="text-danger mb-3">Видалити проєкт?</h2>
+      <p class="fs-5">
+        Ви дійсно хочете видалити проєкт <strong>"{{ project.name }}"</strong>? Цю дію неможливо буде скасувати.
+      </p>
+
+      <form method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'manager:project-detail' project.pk %}" class="btn btn-secondary">Скасувати</a>
+          <button type="submit" class="btn btn-danger">Так, видалити</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

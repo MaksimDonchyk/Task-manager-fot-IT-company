@@ -1,0 +1,74 @@
+{% extends "manager/base.html" %}
+
+{% block title %} {{ task.name }} {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>{{ task.name }}</h2>
+        <span class="badge bg-warning text-dark fs-6">{{ task.get_priority_display }}</span>
+      </div>
+
+      <hr>
+
+      <p class="mb-3"><strong>Опис:</strong><br> {{ task.description|default:"Опис відсутній" }}</p>
+
+      <p class="mb-2"><strong>Дедлайн:</strong> {{ task.deadline }}</p>
+      <p class="mb-2"><strong>Статус:</strong>
+        <span class="badge bg-secondary">{{ task.get_status_display|default:"В роботі" }}</span>
+      </p>
+      <p class="mb-2"><strong>Тип завдання:</strong> {{ task.task_type.name }}</p>
+      <p class="mb-3"><strong>Проєкт:</strong> {{ task.project.name }}</p>
+
+      <div class="mb-4">
+        <strong>Виконавці:</strong>
+        <ul class="list-group mt-2">
+          {% for worker in task.assignees.all %}
+            <li class="list-group-item">{{ worker.username }} ({{ worker.first_name }} {{ worker.last_name }})</li>
+          {% empty %}
+            <li class="list-group-item text-muted">Немає призначених виконавців</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="card bg-light p-3 mb-4">
+        <h5 class="mb-3">Змінити статус / Керування</h5>
+        <div class="d-flex flex-wrap gap-2">
+
+          {% if user in task.assignees.all %}
+          <form action="{% url 'manager:task-change-status' task.pk %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="review">
+            <button type="submit" class="btn btn-outline-info btn-sm">Відправити на рев'ю 🔍</button>
+          </form>
+          {% endif %}
+
+          {% if user.is_team_lead %}
+            <form action="{% url 'manager:task-change-status' task.pk %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="status" value="approved">
+              <button type="submit" class="btn btn-success btn-sm">Approve (Апрув) 👍</button>
+            </form>
+
+            <form action="{% url 'manager:task-change-status' task.pk %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="status" value="rejected">
+              <button type="submit" class="btn btn-danger btn-sm">Reject (Реджект) ❌</button>
+            </form>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        {% if user.is_team_lead %}
+          <a href="{% url 'manager:task-update' task.pk %}" class="btn btn-outline-primary">Редагувати завдання</a>
+        {% endif %}
+        <a href="{% url 'manager:task-list' %}" class="btn btn-secondary">Назад до списку</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
