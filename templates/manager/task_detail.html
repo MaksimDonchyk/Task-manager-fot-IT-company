@@ -33,7 +33,6 @@
         </ul>
       </div>
 
-      <!-- Кнопки зміни статусу для розробників та тімлідів -->
       <div class="card bg-light p-3 mb-4">
         <h5 class="mb-3">Змінити статус / Керування</h5>
         <div class="d-flex flex-wrap gap-2">
@@ -46,7 +45,6 @@
           </form>
           {% endif %}
 
-          <!-- Дії для Тімлідів (Approve / Reject) за допомогою методу is_team_lead -->
           {% if user.is_team_lead %}
             <form action="{% url 'manager:task-change-status' task.pk %}" method="post" class="d-inline">
               {% csrf_token %}

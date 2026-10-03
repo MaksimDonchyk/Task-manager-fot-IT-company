@@ -19,7 +19,6 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">
                 <a href="{% url 'manager:worker-detail' worker.pk %}" class="text-decoration-none text-dark">
-                  <!-- Динамічний вибір кота залежно від посади -->
                   {% with pos=worker.position.name|lower %}
                     {% if "team lead" in pos or "тім лід" in pos or "lead" in pos %}
                       👑🐱

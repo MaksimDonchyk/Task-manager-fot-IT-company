@@ -1,8 +1,8 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from manager.models import Team, Position, Project, Task, TaskType
-from manager.forms import TeamForm, TaskForm  # За потреби імпорти твоїх форм
+from manager.models import Team, Position, TaskType
+from manager.forms import TeamForm
 
 User = get_user_model()
 

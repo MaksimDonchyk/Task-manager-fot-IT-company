@@ -2,7 +2,6 @@
   <nav aria-label="Page navigation" class="mt-4">
     <ul class="pagination justify-content-center">
 
-      {# Кнопка "Перша сторінка" та "Попередня" #}
       {% if page_obj.has_previous %}
         <li class="page-item">
           <a class="page-link" href="?page=1" aria-label="First">&laquo;&laquo; Перша</a>
@@ -15,14 +14,12 @@
         <li class="page-item disabled"><span class="page-link">&laquo; Попередня</span></li>
       {% endif %}
 
-      {# Інформація про поточну сторінку #}
       <li class="page-item disabled">
         <span class="page-link bg-light text-dark">
           Сторінка <strong>{{ page_obj.number }}</strong> з {{ page_obj.paginator.num_pages }}
         </span>
       </li>
 
-      {# Кнопка "Наступна" та "Остання" #}
       {% if page_obj.has_next %}
         <li class="page-item">
           <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">Наступна &raquo;</a>
