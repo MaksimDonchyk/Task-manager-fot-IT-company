@@ -1,12 +1,9 @@
+import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = 'django-insecure-d_syn6ve@w&5iwfw3q8vwx1x6%vx7d(&1dwzzb_0cirrrd7^c4'
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-d_syn6ve@w&5iwfw3q8vwx1x6%vx7d(&1dwzzb_0cirrrd7^c4')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,14 +45,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'task_manager_project.wsgi.application'
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -92,4 +81,9 @@ MAILERS = {
 AUTH_USER_MODEL = 'manager.Worker'
 
 LOGIN_REDIRECT_URL = "/"
+
+INTERNAL_IPS = [
+    '127.0.0.1'
+]
+
 LOGOUT_REDIRECT_URL = "/accounts/login/"

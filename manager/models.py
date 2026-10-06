@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 from django.urls import reverse
 
-from task_manager_project import settings
+from django.conf import settings
 
 
 class Position(models.Model):
