@@ -1,12 +1,17 @@
 from .base import *
+import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["task-manager-fot-it-company.onrender.com"]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://task-manager-fot-it-company.onrender.com",
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
