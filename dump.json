@@ -1,0 +1,360 @@
+[
+{
+    "model": "manager.position",
+    "pk": 1,
+    "fields": {
+        "name": "Team Lead",
+        "group": 1
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 2,
+    "fields": {
+        "name": "Python Developer",
+        "group": 2
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 3,
+    "fields": {
+        "name": "Frontend Developer",
+        "group": 2
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 4,
+    "fields": {
+        "name": "Progect Manager",
+        "group": 3
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 5,
+    "fields": {
+        "name": "QA Engineer",
+        "group": 4
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 6,
+    "fields": {
+        "name": "QA Manual",
+        "group": 4
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 7,
+    "fields": {
+        "name": "QA Automation",
+        "group": 4
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 8,
+    "fields": {
+        "name": "UI/UX Desiner",
+        "group": 5
+    }
+},
+{
+    "model": "manager.position",
+    "pk": 9,
+    "fields": {
+        "name": "DevOps Engineer",
+        "group": 6
+    }
+},
+{
+    "model": "manager.tasktype",
+    "pk": 1,
+    "fields": {
+        "name": "Bug"
+    }
+},
+{
+    "model": "manager.tasktype",
+    "pk": 2,
+    "fields": {
+        "name": "New Feature"
+    }
+},
+{
+    "model": "manager.tasktype",
+    "pk": 3,
+    "fields": {
+        "name": "Breaking Change"
+    }
+},
+{
+    "model": "manager.tasktype",
+    "pk": 4,
+    "fields": {
+        "name": "Refactoring"
+    }
+},
+{
+    "model": "manager.tasktype",
+    "pk": 5,
+    "fields": {
+        "name": "QA"
+    }
+},
+{
+    "model": "manager.worker",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$pcdyhgffqX1e7mEZVcgeeh$PiT+hkGpOEp6SbSimi8sMxFT6jIL8fLF0HdbeN7+LOI=",
+        "last_login": "2026-10-02T17:33:49.884Z",
+        "is_superuser": true,
+        "username": "admin_man",
+        "first_name": "",
+        "last_name": "",
+        "email": "admin.admin@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-10-01T15:09:46.162Z",
+        "position": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "manager.worker",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$SiXQNxAxHCrZOGRaElP1rB$uireNzvZl0lcEjXXBSqXG3CyVFWdQSMHVaEXi7PCKPs=",
+        "last_login": "2026-10-02T17:06:35.930Z",
+        "is_superuser": false,
+        "username": "dev_1",
+        "first_name": "John",
+        "last_name": "Silver",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-02T15:08:40.335Z",
+        "position": 2,
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "manager.worker",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$ttOaap4MYGBIEKEn2f7B8R$LPT+lzSgdwPVqdiqC8wZIr81/jKyYoDNJ1lprpwaaS4=",
+        "last_login": "2026-10-02T17:56:29.509Z",
+        "is_superuser": false,
+        "username": "tim_1",
+        "first_name": "Bob",
+        "last_name": "Olegenko",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-02T15:40:57.659Z",
+        "position": 1,
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "manager.worker",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$3blRApA3cVoqMWmcsO36P3$7TutrVMTGz6M2aEU8rZ3Tilw7ah42XwRBch+yWpm+fA=",
+        "last_login": "2026-10-02T16:47:45.931Z",
+        "is_superuser": false,
+        "username": "pm_1",
+        "first_name": "Oleg",
+        "last_name": "Olegenko",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-02T16:41:21.951Z",
+        "position": 4,
+        "groups": [
+            3
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "manager.worker",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$qryZixt7zNAxzQ1kURyuTb$XuZ/AKU6Hs/BWrikJ/lHQNeiLny868MnD9Q322iKDHI=",
+        "last_login": "2026-10-06T18:54:31.813Z",
+        "is_superuser": false,
+        "username": "pm_2",
+        "first_name": "Oleg",
+        "last_name": "Olegenko",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-10-02T16:50:16.466Z",
+        "position": 4,
+        "groups": [
+            3
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "manager.worker",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$cGfSdcz2NYMqTojh3eCRLf$dcWS//tf5GmAqNl8383JmCjS3m9JHVDO7I8j/wJCBFw=",
+        "last_login": "2026-10-02T18:47:46.510Z",
+        "is_superuser": false,
+        "username": "dev_2",
+        "first_name": "John",
+        "last_name": "Black",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-02T17:19:45.469Z",
+        "position": 2,
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "manager.team",
+    "pk": 1,
+    "fields": {
+        "name": "POSDEV",
+        "task_types": [],
+        "members": [
+            1
+        ]
+    }
+},
+{
+    "model": "manager.team",
+    "pk": 2,
+    "fields": {
+        "name": "DEFTOR3",
+        "task_types": [
+            2
+        ],
+        "members": [
+            2,
+            6,
+            3
+        ]
+    }
+},
+{
+    "model": "manager.project",
+    "pk": 1,
+    "fields": {
+        "name": "LIB PROJECT",
+        "description": "Library Progect for managing books auhtors, formats",
+        "team": 2
+    }
+},
+{
+    "model": "manager.project",
+    "pk": 2,
+    "fields": {
+        "name": "TAXI SERVISE",
+        "description": "managmens system for taxs servise have car, driver, manufacturier",
+        "team": 2
+    }
+},
+{
+    "model": "manager.task",
+    "pk": 1,
+    "fields": {
+        "name": "Bug fix in Lib poject",
+        "description": "In lib project there is a bug that shows invalid data",
+        "deadline": "2026-10-03",
+        "is_completed": true,
+        "priority": "Major",
+        "status": "approved",
+        "task_type": 1,
+        "project": 1,
+        "assignees": []
+    }
+},
+{
+    "model": "manager.task",
+    "pk": 2,
+    "fields": {
+        "name": "New Feature",
+        "description": "Add new feature in lib project that shows all formats",
+        "deadline": "2026-10-07",
+        "is_completed": false,
+        "priority": "Critical",
+        "status": "in_progress",
+        "task_type": 2,
+        "project": 1,
+        "assignees": [
+            1
+        ]
+    }
+},
+{
+    "model": "manager.task",
+    "pk": 3,
+    "fields": {
+        "name": "Books db refactor",
+        "description": "Refactoring db for books",
+        "deadline": "2026-10-03",
+        "is_completed": true,
+        "priority": "Minor",
+        "status": "approved",
+        "task_type": 4,
+        "project": 1,
+        "assignees": [
+            2
+        ]
+    }
+},
+{
+    "model": "manager.task",
+    "pk": 4,
+    "fields": {
+        "name": "Re",
+        "description": "",
+        "deadline": "2026-10-07",
+        "is_completed": true,
+        "priority": "Critical",
+        "status": "approved",
+        "task_type": 2,
+        "project": 1,
+        "assignees": [
+            6
+        ]
+    }
+},
+{
+    "model": "manager.task",
+    "pk": 5,
+    "fields": {
+        "name": "Fixing",
+        "description": "fix stuff",
+        "deadline": "2026-10-02",
+        "is_completed": false,
+        "priority": "Blocker",
+        "status": "review",
+        "task_type": 2,
+        "project": 2,
+        "assignees": [
+            6
+        ]
+    }
+}
+]
