@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from manager.models import Task, Worker, Position, TaskType, Team, Project
+from manager.models import Task, Worker, TaskType, Team, Project
 
 
 class TaskForm(forms.ModelForm):
@@ -44,30 +44,6 @@ class TaskForm(forms.ModelForm):
                 self.fields["assignees"].queryset = Worker.objects.filter(
                     teams__in=user_teams
                 ).distinct()
-
-
-class PositionForm(forms.ModelForm):
-    class Meta:
-        model = Position
-        fields = ["name"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-        }
-
-    def clean_name(self):
-        name = self.cleaned_data.get("name")
-        if len(name) < 4:
-            raise ValidationError("Name for position too short")
-        return name
-
-
-class TaskTypeForm(forms.ModelForm):
-    class Meta:
-        model = TaskType
-        fields = ["name"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Input type of task"}),
-        }
 
 
 class TeamForm(forms.ModelForm):

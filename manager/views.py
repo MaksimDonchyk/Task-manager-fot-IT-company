@@ -7,8 +7,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from manager.forms import (
     TaskForm,
-    PositionForm,
-    TaskTypeForm,
     WorkerCreationForm,
     TeamForm,
     ProjectForm
@@ -16,8 +14,6 @@ from manager.forms import (
 from manager.models import (
     Task,
     Worker,
-    Position,
-    TaskType,
     Team,
     Project
 )
@@ -128,34 +124,6 @@ class WorkerCreateView(CreateView):
     success_url = reverse_lazy("manager:worker-list")
 
 
-class PositionListView(ListView):
-    model = Position
-    template_name = "manager/position_list.html"
-    context_object_name = "position_list"
-    paginate_by = 5
-
-
-class PositionCreateView(CreateView):
-    model = Position
-    form_class = PositionForm
-    template_name = "manager/position_form.html"
-    success_url = reverse_lazy("manager:position-list")
-
-
-class TaskTypeListView(ListView):
-    model = TaskType
-    template_name = "manager/task_type_list.html"
-    context_object_name = "task_type_list"
-    paginate_by = 5
-
-
-class TaskTypeCreateView(CreateView):
-    model = TaskType
-    form_class = TaskTypeForm
-    template_name = "manager/task_type_form.html"
-    success_url = reverse_lazy("manager:task-type-list")
-
-
 class TeamListView(ListView):
     model = Team
     template_name = "manager/team_list.html"
@@ -209,7 +177,7 @@ class ProjectDetailView(DetailView):
 
 class ProjectCreateView(CreateView):
   model = Project
-  fields = ["name", "description", "team"]
+  form_class = ProjectForm
   template_name = "manager/project_form.html"
   success_url = reverse_lazy("manager:project-list")
 
@@ -221,7 +189,7 @@ class ProjectCreateView(CreateView):
 
 class ProjectUpdateView(StaffRequiredMixin, UpdateView):
     model = Project
-    fields = ["name", "description", "team"]
+    form_class = ProjectForm
     template_name = "manager/project_form.html"
     success_url = reverse_lazy("manager:project-list")
 
