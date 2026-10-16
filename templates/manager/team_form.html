@@ -1,0 +1,65 @@
+{% extends "manager/base.html" %}
+
+{% block title %} Створити команду {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card shadow-sm p-4">
+      <h2 class="mb-4 text-center">Створити нову команду</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div class="mb-3">
+          <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">Назва команди</label>
+          {{ form.name }}
+          {{ form.name.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Спеціалізація (Типи завдань):</label>
+          <div class="border p-3 rounded bg-light">
+            {% for checkbox in form.task_types %}
+              <div class="form-check mb-2">
+                {{ checkbox.tag }}
+                <label class="form-check-label ms-1" for="{{ checkbox.id_for_label }}">
+                  {{ checkbox.choice_label }}
+                </label>
+              </div>
+            {% empty %}
+              <p class="text-muted mb-0">Немає доступних типів завдань.</p>
+            {% endfor %}
+          </div>
+          {{ form.task_types.errors }}
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Учасники команди:</label>
+          <div class="border p-3 rounded bg-light" style="max-height: 250px; overflow-y: auto;">
+            {% for checkbox in form.members %}
+              <div class="form-check mb-2">
+                {{ checkbox.tag }}
+                <label class="form-check-label ms-1" for="{{ checkbox.id_for_label }}">
+                  {{ checkbox.choice_label }}
+                </label>
+              </div>
+            {% empty %}
+              <p class="text-muted mb-0">Немає доступних працівників.</p>
+            {% endfor %}
+          </div>
+          <div class="form-text text-muted mt-1">Оберіть тімліда та розробників, які увійдуть до команди.</div>
+          {{ form.members.errors }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'manager:team-list' %}" class="btn btn-secondary">Скасувати</a>
+          <button type="submit" class="btn btn-primary">Зберегти команду 💾</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
