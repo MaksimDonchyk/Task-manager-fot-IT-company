@@ -32,7 +32,7 @@ class TaskListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         user = self.request.user
 
-        if user.is_superuser or user.has_perm("manager.view_all_tasks"):
+        if user.is_superuser or user.has_perm("manager.view_all_tasks") or user.groups.filter(name__in=["Group_1", "Group_3"]).exists():
             return queryset
 
         return queryset.filter(assignees=user)

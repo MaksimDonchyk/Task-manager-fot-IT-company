@@ -45,7 +45,7 @@
           </form>
           {% endif %}
 
-          {% if user.is_team_lead %}
+          {% if user.is_superuser or perms.manager.change_task %}
             <form action="{% url 'manager:task-change-status' task.pk %}" method="post" class="d-inline">
               {% csrf_token %}
               <input type="hidden" name="status" value="approved">
@@ -63,7 +63,7 @@
       </div>
 
       <div class="d-flex justify-content-between">
-        {% if user.is_team_lead %}
+        {% if user.is_superuser or perms.manager.change_task %}
           <a href="{% url 'manager:task-update' task.pk %}" class="btn btn-outline-primary">Редагувати завдання</a>
         {% endif %}
         <a href="{% url 'manager:task-list' %}" class="btn btn-secondary">Назад до списку</a>

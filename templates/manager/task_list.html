@@ -8,7 +8,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Список завдань</h1>
 
-    {% if user.is_staff or user.is_superuser %}
+    {% if user.is_superuser or perms.manager.add_task %}
       <a href="{% url 'manager:task-create' %}" class="btn btn-primary">
         Створити завдання ➕
       </a>
