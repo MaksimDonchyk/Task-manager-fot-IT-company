@@ -1,38 +1,28 @@
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.http import HttpResponseForbidden
-from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin
+)
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView
+)
 
 from manager.forms import (
+    ProjectForm,
     TaskForm,
-    WorkerCreationForm,
     TeamForm,
-    ProjectForm
+    WorkerCreationForm
 )
-from manager.models import (
-    Task,
-    Worker,
-    Team,
-    Project
-)
+from manager.models import Project, Task, Team, Worker
 
 
-class TeamLeadRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        user = self.request.user
-        if user.is_superuser:
-            return True
-        return user.groups.filter(name__in=["Team Leads", "Project Managers (PM)"]).exists()
-
-
-class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_staff or self.request.user.is_superuser
-
-
-class TaskListView(LoginRequiredMixin,ListView):
+class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = "manager/task_list.html"
     context_object_name = "task_list"
@@ -42,7 +32,7 @@ class TaskListView(LoginRequiredMixin,ListView):
         queryset = super().get_queryset()
         user = self.request.user
 
-        if user.is_superuser or user.groups.filter(name__in=["Team Leads", "Project Managers (PM)"]).exists():
+        if user.is_superuser or user.has_perm("manager.view_all_tasks"):
             return queryset
 
         return queryset.filter(assignees=user)
@@ -54,27 +44,24 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "task"
 
 
-class TaskCreateView(LoginRequiredMixin, TeamLeadRequiredMixin, CreateView):
+class TaskCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = "manager/task_form.html"
+    permission_required = "manager.add_task"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
-    def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_staff or request.user.is_superuser or request.user.is_team_lead()):
-            return redirect("manager:task-list")
-        return super().dispatch(request, *args, **kwargs)
 
-
-class TaskUpdateView(LoginRequiredMixin, TeamLeadRequiredMixin, UpdateView):
+class TaskUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = "manager/task_form.html"
     success_url = reverse_lazy("manager:task-list")
+    permission_required = "manager.change_task"
 
 
 class TaskChangeStatusView(LoginRequiredMixin, View):
@@ -85,30 +72,25 @@ class TaskChangeStatusView(LoginRequiredMixin, View):
         if new_status == "review":
             pass
         elif new_status in ["approved", "rejected"]:
-            if not request.user.is_team_lead():
+            if not (request.user.is_superuser or request.user.has_perm("manager.change_task")):
                 return redirect("manager:task-detail", pk=task.pk)
         else:
-            # Якщо передано невідомий статус — повертаємося назад
             return redirect("manager:task-detail", pk=task.pk)
 
         if new_status in dict(Task.StatusChoices.choices):
             task.status = new_status
-
-            if new_status == "approved":
-                task.is_completed = True
-            else:
-                task.is_completed = False
-
+            task.is_completed = (new_status == "approved")
             task.save()
 
         return redirect("manager:task-detail", pk=task.pk)
 
 
-class WorkerListView(TeamLeadRequiredMixin, ListView):
+class WorkerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Worker
     template_name = "manager/worker_list.html"
     context_object_name = "worker_list"
     paginate_by = 5
+    permission_required = "manager.view_worker"
 
 
 class WorkerDetailView(LoginRequiredMixin, DetailView):
@@ -124,77 +106,73 @@ class WorkerCreateView(CreateView):
     success_url = reverse_lazy("manager:worker-list")
 
 
-class TeamListView(ListView):
+class TeamListView(LoginRequiredMixin, ListView):
     model = Team
     template_name = "manager/team_list.html"
     context_object_name = "team_list"
     paginate_by = 5
 
 
-class TeamDetailView(DetailView):
+class TeamDetailView(LoginRequiredMixin, DetailView):
     model = Team
     template_name = "manager/team_detail.html"
     context_object_name = "team"
 
 
-class TeamCreateView(LoginRequiredMixin, CreateView):
+class TeamCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Team
     form_class = TeamForm
     template_name = "manager/team_form.html"
     success_url = reverse_lazy("manager:team-list")
-
-    def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_staff or request.user.is_superuser):
-            return redirect("manager:team-list")
-        return super().dispatch(request, *args, **kwargs)
+    permission_required = "manager.add_team"
 
 
-class TeamUpdateView(LoginRequiredMixin, UpdateView):
+class TeamUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Team
     form_class = TeamForm
     template_name = 'manager/team_form.html'
     success_url = reverse_lazy('manager:team-list')
+    permission_required = "manager.change_team"
 
 
-class TeamDeleteView(LoginRequiredMixin, DeleteView):
+class TeamDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Team
     template_name = 'manager/team_confirm_delete.html'
     success_url = reverse_lazy('manager:team-list')
+    permission_required = "manager.delete_team"
 
 
-class ProjectListView(ListView):
+class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
     template_name = "manager/project_list.html"
     context_object_name = "project_list"
     paginate_by = 5
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = "manager/project_detail.html"
     context_object_name = "project"
 
 
-class ProjectCreateView(CreateView):
-  model = Project
-  form_class = ProjectForm
-  template_name = "manager/project_form.html"
-  success_url = reverse_lazy("manager:project-list")
-
-  def dispatch(self, request, *args, **kwargs):
-    if not (request.user.is_staff or request.user.is_superuser):
-      return HttpResponseForbidden("Тільки Project Manager може створювати проєкти.")
-    return super().dispatch(request, *args, **kwargs)
-
-
-class ProjectUpdateView(StaffRequiredMixin, UpdateView):
+class ProjectCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Project
     form_class = ProjectForm
     template_name = "manager/project_form.html"
     success_url = reverse_lazy("manager:project-list")
+    permission_required = "manager.add_project"
 
 
-class ProjectDeleteView(StaffRequiredMixin, DeleteView):
+class ProjectUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = "manager/project_form.html"
+    success_url = reverse_lazy("manager:project-list")
+    permission_required = "manager.change_project"
+
+
+class ProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Project
     template_name = "manager/project_confirm_delete.html"
     success_url = reverse_lazy("manager:project-list")
+    permission_required = "manager.delete_project"
