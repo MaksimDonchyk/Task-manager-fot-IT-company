@@ -70,14 +70,18 @@ class TaskChangeStatusView(LoginRequiredMixin, View):
         new_status = request.POST.get("status")
 
         if new_status == "review":
-            pass
+            is_assignee = request.user in task.assignees.all()
+            if not (request.user.is_superuser or is_assignee):
+                return redirect("manager:task-detail", pk=task.pk)
+
         elif new_status in ["approved", "rejected"]:
             if not (request.user.is_superuser or request.user.has_perm("manager.change_task")):
                 return redirect("manager:task-detail", pk=task.pk)
         else:
             return redirect("manager:task-detail", pk=task.pk)
 
-        if new_status in dict(Task.StatusChoices.choices):
+        valid_statuses = [choice[0] for choice in Task.StatusChoices.choices]
+        if new_status in valid_statuses:
             task.status = new_status
             task.is_completed = (new_status == "approved")
             task.save()
